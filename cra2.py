@@ -29,24 +29,29 @@ for x in range(24):
 	temp = temp.replace('\t', '').replace('\n', '')
 	listTitle.append(temp)
 
-GITHUB_TOKEN = os.environ['GitTo']
+issue_title = "CLS공지(%s)" % today.strftime("%y.%m.%d")
+issue_body = ''
+for x in range(24):
+	if x == 0:
+		issue_body = issue_body + '[공지사항]\n'
+	if x == 6:
+		issue_body = issue_body + '[취업정보]\n'
+	if x == 12:
+		issue_body = issue_body + '[장학 및 학생복지]\n'
+	if x == 18:
+		issue_body = issue_body + '[실무수습 및 봉사활동]\n'
+	issue_body = issue_body + listTitle[x] + '\n'
+	if x%6 == 5:
+		issue_body = issue_body + '----------------------------------\n\n'
+issue_body + 'https://law.cnu.ac.kr/law/index.do'
+
+GITHUB_TOKEN = os.environ['GITTO']
 REPO_NAME = "MFL"
 repo = Github(GITHUB_TOKEN).get_user().get_repo(REPO_NAME)
+res = repo.create_issue(title=issue_title, body='')
 
-if issue_body != '' and REPO_NAME == repo.name:
-	issue_title = "CLS공지(%s)" % today.strftime("%y.%m.%d")
-	print(issue_title)
-	print('----------------------------------\n')
-	for x in range(24):
-		if x == 0:
-			print('[공지사항]')
-		if x == 6:
-			print('[취업정보]')
-		if x == 12:
-			print('[장학 및 학생복지]')
-		if x == 18:
-			print('[실무수습 및 봉사활동]')
-		print(listTitle[x])
-		if x%6 == 5:
-			print('----------------------------------\n')
-	print('https://law.cnu.ac.kr/law/index.do')
+print(issue_title)
+print('----------------------------------\n')
+print(issue_body)
+
+
